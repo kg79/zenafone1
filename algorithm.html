@@ -1,0 +1,51 @@
+<!doctype html>
+<html>
+    <head>
+        <script>
+	  let ray = [1, 2];
+	  function generate(max) {
+	      for (let i = 3; i < max; i++) {
+		  ray.push(i);
+		  for (let ii = i; ii > 0; ii--) {
+		      ray.push(i/ii);
+		  }
+	      }
+	      return ray;
+	  }
+	  generate(10);
+	  let pool;
+	  function sort() {
+	      for (let h = 0; h < ray.length; h++) {
+		  for (let i = 0; i < ray.length; i++) {
+		      if (ray[i] > ray[i+1]) {
+			  pool = ray[i];
+			  ray[i] = ray[i+1];
+			  ray[i+1] = pool;
+		      }
+		  }
+	      }    
+	  }
+	  sort();
+	  function removeDuplicates() {
+	      for (let h = 0; h < ray.length; h++) {
+		  for (let i = 0; i < ray.length; i++) {
+		      if (ray[i] === ray[i+1]) {
+			  ray.splice(i, 1);
+		      }
+		  }
+	      }
+	      return ray;
+	  }
+	  console.log(removeDuplicates());
+        </script>  
+        <style>
+
+        </style>
+    </head>
+    <body>
+      
+    </body>
+    <script>
+        
+    </script>
+</html>

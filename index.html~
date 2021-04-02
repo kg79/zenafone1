@@ -1,0 +1,107 @@
+<!doctype html>
+<html>
+  <head>    
+    <style>
+      body {
+	  margin:0;
+      }
+      main {
+	  background:black;
+	  height:100vh;
+	  display:grid;
+	  grid-template-columns:20vw 80vw;
+	  grid-template-rows:20vh 80vh;
+	  grid-template-areas:
+	      "kaleidoscopic legend"
+	      "kaleidoscopic interface"
+      }
+      #kaleidoscopic {
+	  background:hsl(0, 50%, 50%);
+	  grid-area:kaleidoscopic;
+      } #legend {
+	  background:hsl(120, 50%, 50%);
+	  grid-area:legend;
+      } #interface {
+	  background:hsl(240, 50%, 50%);
+	  grid-area:interface;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section id='kaleidoscopic'>&nbsp;</section>
+      <section id='legend'>&nbsp;</section>
+      <section id='interface'>&nbsp;</section>
+    </main> 
+  </body>
+  <script>
+
+    const kaleidoscopic = document.getElementById('kaleidoscopic');
+    const legend = document.getElementById('legend');
+    const interface = document.getElementById('interface');
+
+    
+    let ray = [{fraction:'1/1', decimal:1}, {fraction:'2/1', decimal:2}];
+    function generate(max) {
+	for (let i = 3; i < max; i++) {
+	    for (let ii = i; ii > 0; ii--) {
+		ray.push({fraction:`${i}/${ii}`, decimal:i/ii});
+	    }
+	}
+	return ray;
+    }
+    generate(10);
+    let pool1, pool0;
+    function sort() {
+
+	for (let h = 0; h < ray.length; h++) {
+	    for (let i = 0; i < ray.length-1; i++) {
+		if (ray[i].decimal > ray[i+1].decimal) {
+		    pool1 = ray[i].decimal;
+		    pool0 = ray[i].fraction;
+		    ray[i].decimal = ray[i+1].decimal;
+		    ray[i].fraction = ray[i+1].fraction;
+		    ray[i+1].decimal = pool1;
+		    ray[i+1].fraction = pool0;
+		}
+	    }
+	}
+	return ray;
+    }
+    sort()
+
+    function removeDuplicates() {
+	for (let h = 0; h < ray.length; h++) {
+	    for (let i = 0; i < ray.length-1; i++) {
+		if (ray[i].decimal === ray[i+1].decimal) {
+		    ray.splice(i, 1);
+		}
+	    }
+	}
+	return ray;
+    }
+
+    function render() {
+	let indexNode = document.createElement('article');
+	let indexText = document.createTextNode('index');
+
+	let fractionNode = document.createElement('article');
+	let fractionText = document.createTextNode('fraction');
+
+	let decimalNode = document.createElement('article');
+	let decimalText = document.createTextNode('decimal');
+
+	let frequencyNode = document.createElement('article');
+	let frequencyText = document.createTextNode('frequency');
+
+	indexNode.appendChild(indexText);
+	indexNode.appendChild(indexText);
+	indexNode.appendChild(indexText);
+	indexNode.appendChild(indexText);
+    }
+    render()
+    
+
+
+  </script>
+</html>

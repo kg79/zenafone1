@@ -1,0 +1,134 @@
+<!doctype html>
+<html>
+  <head>    
+    <style>
+      body {
+	  margin:0;
+	  font-family:sans-serif;
+      }
+      main {
+	  background:black;
+	  height:100vh;
+	  display:grid;
+	  grid-template-columns:20vw 80vw;
+	  grid-template-rows:20vh 80vh;
+	  grid-template-areas:
+	      "kaleidoscopic legend"
+	      "kaleidoscopic interface"
+      }
+      #kaleidoscopic {
+	  background:hsl(0, 50%, 50%);
+	  grid-area:kaleidoscopic;
+	  display:grid;
+	  grid-template-columns:auto auto auto auto;
+	  overflow-y:scroll;
+      } #legend {
+	  background:hsl(120, 50%, 50%);
+	  grid-area:legend;
+      } #interface {
+	  background:hsl(240, 50%, 50%);
+	  grid-area:interface;
+      } #fundamental {
+	  width:5em;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section id='kaleidoscopic'></section>
+      <section id='legend'>
+	<article>
+	  fundamental: <input id='fundamental' type='number' value='108'>
+	</article>
+      </section>
+      <section id='interface'>&nbsp;</section>
+    </main> 
+  </body>
+  <script>
+
+    const kaleidoscopic = document.getElementById('kaleidoscopic');
+    const legend = document.getElementById('legend');
+    const interface = document.getElementById('interface');
+    const fundamental = document.getElementById('fundamental');
+
+    
+    let ray = [{fraction:'1/1', decimal:1}, {fraction:'2/1', decimal:2}];
+    function generate(max) {
+	for (let i = 3; i < max; i++) {
+	    for (let ii = i; ii > 0; ii--) {
+		ray.push({fraction:`${i}/${ii}`, decimal:i/ii});
+	    }
+	}
+	return ray;
+    }
+    generate(10);
+    let pool1, pool0;
+    function sort() {
+
+	for (let h = 0; h < ray.length; h++) {
+	    for (let i = 0; i < ray.length-1; i++) {
+		if (ray[i].decimal > ray[i+1].decimal) {
+		    pool1 = ray[i].decimal;
+		    pool0 = ray[i].fraction;
+		    ray[i].decimal = ray[i+1].decimal;
+		    ray[i].fraction = ray[i+1].fraction;
+		    ray[i+1].decimal = pool1;
+		    ray[i+1].fraction = pool0;
+		}
+	    }
+	}
+	return ray;
+    }
+    sort()
+
+    function removeDuplicates() {
+	for (let h = 0; h < ray.length; h++) {
+	    for (let i = 0; i < ray.length-1; i++) {
+		if (ray[i].decimal === ray[i+1].decimal) {
+		    ray.splice(i, 1);
+		}
+	    }
+	}
+	return ray;
+    }
+
+    removeDuplicates()
+
+    function render() {
+	for (let i = 0; i < ray.length; i++) {
+	    let indexNode = document.createElement('article');
+	    let indexText = document.createTextNode(i);
+
+	    let fractionNode = document.createElement('article');
+	    let fractionText = document.createTextNode(ray[i].fraction);
+
+	    let decimalNode = document.createElement('article');
+	    let decimalText = document.createTextNode(ray[i].decimal.toFixed(4).replace(/0+$/, '').replace(/\.$/, ''));
+
+	    let frequencyNode = document.createElement('article');
+let frequencyText = document.createTextNode((fundamental.value* eval(ray[i].fraction)).toFixed(4).replace(/0+$/, '').replace(/\.$/,''))
+
+	    indexNode.appendChild(indexText);
+	    fractionNode.appendChild(fractionText);
+	    decimalNode.appendChild(decimalText);
+	    frequencyNode.appendChild(frequencyText);
+
+	    kaleidoscopic.appendChild(indexNode);
+	    kaleidoscopic.appendChild(fractionNode);
+	    kaleidoscopic.appendChild(decimalNode);
+	    kaleidoscopic.appendChild(frequencyNode);
+	}
+	
+    }
+    render();
+
+    fundamental.addEventListener('change', () => {
+	for (let i = 0; i < ray.length; i++) {
+	    (fundamental.value* eval(ray[i].fraction)).toFixed(4).replace(/0+$/, '').replace(/\.$/,'')
+	}
+    });
+    
+
+
+  </script>
+</html>
